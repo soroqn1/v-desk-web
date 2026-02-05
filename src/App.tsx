@@ -97,10 +97,10 @@ function App() {
       ) : (
         // list tasks
         <div className="w-full max-w-2xl space-y-6">
-          {tasks.map((task) => (
+          {tasks.map((task, index) => (
             <div key={task.id} className="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
               <h3 className="text-lg font-bold text-gray-800 mb-4">
-                <span className="text-[#50c878] mr-2">#{task.id}</span>
+                <span className="text-[#50c878] mr-2">#{index + 1}</span>
                 {task.instruction}
               </h3>
 
