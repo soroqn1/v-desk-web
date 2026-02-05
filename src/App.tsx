@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -16,6 +17,8 @@ interface Task {
   options: Option[];
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 function App() {
   const [token, setToken] = useState<string | null>(sessionStorage.getItem('token'));
 
@@ -23,7 +26,7 @@ function App() {
     const fetchToken = async () => {
       if (!token) {
         try {
-          const response = await axios.get<SessionResponse>('http://localhost:3000/api/session');
+          const response = await axios.get<SessionResponse>(`${API_URL}/api/session`);
           const newToken = response.data.token;
           sessionStorage.setItem('token', newToken);
           setToken(newToken);
@@ -40,7 +43,7 @@ function App() {
 
   const loadTasks = async () => {
     try {
-      const response = await axios.get<Task[]>('http://localhost:3000/api/tasks');
+      const response = await axios.get<Task[]>(`${API_URL}/api/tasks`);
       setTasks(response.data);
     } catch (error) {
       console.error('Error loading tasks:', error);
@@ -52,7 +55,7 @@ function App() {
   const submitAnswer = async (taskId: number, optionId: number) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/task/${taskId}/answer`,
+        `${API_URL}/api/task/${taskId}/answer`,
         { optionId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
