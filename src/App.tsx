@@ -47,13 +47,35 @@ function App() {
     }
   };
 
+  const [results, setResults] = useState<Record<number, any>>({});
+
+  const submitAnswer = async (taskId: number, optionId: number) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/task/${taskId}/answer`,
+        { optionId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setResults(prev => ({
+        ...prev,
+        [taskId]: {
+          correct: response.data.correct,
+          selectedOptionId: optionId
+        }
+      }));
+    } catch (error) {
+      console.error("Answer submission failed", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 font-sans">
 
       {/* Header Section (always visible) */}
       <div className="w-full max-w-2xl text-center mb-10">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight">V-Desk</h1>
-        <p className="text-gray-500 mt-2">Interactive Programming Practice</p>
+        <p className="text-gray-500 mt-2">V-Desk is a web application that allows users to practice by solving tasks</p>
       </div>
 
       {/* CONDITIONAL RENDERING */}
@@ -83,15 +105,32 @@ function App() {
               </h3>
 
               <div className="grid grid-cols-1 gap-3">
-                {task.options.map((option) => (
-                  <button
-                    key={option.id}
-                    className="text-left p-4 rounded-xl border-2 border-gray-50 hover:border-[#50c878] hover:bg-emerald-50 transition-all group"
-                  >
-                    <span className="inline-block w-8 text-gray-400 group-hover:text-[#50c878] font-bold uppercase text-xs">Opt</span>
-                    {option.text}
-                  </button>
-                ))}
+                {task.options.map((option) => {
+                  const result = results[task.id];
+                  const isSelected = result?.selectedOptionId === option.id;
+                  const isCorrect = isSelected && result.correct;
+                  const isWrong = isSelected && !result.correct;
+                  const hasAnswered = !!result;
+
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => !hasAnswered && submitAnswer(task.id, option.id)}
+                      className={`
+        w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between
+        ${!hasAnswered ? 'border-gray-100 hover:border-[#50c878] hover:bg-emerald-50' : 'cursor-default'}
+        ${isCorrect ? 'border-green-500 bg-green-50 text-green-700' : ''}
+        ${isWrong ? 'border-red-500 bg-red-50 text-red-700' : ''}
+        ${hasAnswered && !isSelected ? 'opacity-40' : ''}
+      `}
+                    >
+                      <span className="font-medium">{option.text}</span>
+                      {isSelected && (
+                        <span className="font-bold">{isCorrect ? '✓' : '✗'}</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}
