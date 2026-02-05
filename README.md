@@ -9,7 +9,7 @@
 Frontend service for the Virtual Front Desk project. A reactive, high-performance interface for interactive worksheets.
 
 > [IMPORTANT]
-> This is a sub-module of the **[Virtual Front Desk Main Repository](https://github.com/soroqn/v-desk-main)**.  
+> This is a sub-module of the **[Virtual Front Desk Main Repository](https://github.com/soroqn1/v-desk-main.git)**.  
 
 ---
 
