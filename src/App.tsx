@@ -17,7 +17,7 @@ interface Task {
   options: Option[];
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = 'https://v-desk-api.onrender.com';
 
 function App() {
   const [token, setToken] = useState<string | null>(sessionStorage.getItem('token'));
