@@ -17,7 +17,7 @@ interface Task {
   options: Option[];
 }
 
-const API_URL = 'https://v-desk-api.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function App() {
   const [token, setToken] = useState<string | null>(sessionStorage.getItem('token'));
@@ -118,10 +118,10 @@ function App() {
                   return (
                     <button
                       key={option.id}
-                      onClick={() => !hasAnswered && submitAnswer(task.id, option.id)}
+                      onClick={() => submitAnswer(task.id, option.id)}
                       className={`
         w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between
-        ${!hasAnswered ? 'border-gray-100 hover:border-[#50c878] hover:bg-emerald-50' : 'cursor-default'}
+        ${!isSelected ? 'border-gray-100 hover:border-[#50c878] hover:bg-emerald-50' : ''}
         ${isCorrect ? 'border-green-500 bg-green-50 text-green-700' : ''}
         ${isWrong ? 'border-red-500 bg-red-50 text-red-700' : ''}
         ${hasAnswered && !isSelected ? 'opacity-40' : ''}
